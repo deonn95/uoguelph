@@ -1,0 +1,12 @@
+a1.pdf
+lex.c
+lex.yy.c
+lex.yy.o
+Makefile
+msh
+mshell.c
+mshell (copy).c
+mshell.o
+out.txt
+README.txt
+test.txt
