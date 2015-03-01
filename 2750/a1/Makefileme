@@ -1,0 +1,14 @@
+FLAGS = -Wall
+
+all: ParameterManager
+
+ParameterManager: ParameterManager.o ParameterList.o List.o
+	ar rcs libpm.a ParameterManager.o ParameterList.o List.o
+
+#library objects
+ParameterManager.o: ParameterManager.c ParameterManager.h ParameterList.c ParameterList.h List.c List.h Boolean.h
+	gcc -c $(FLAGS) ParameterManager.c
+ParameterList.o: ParameterList.c ParameterList.h List.c List.h
+	gcc -c $(FLAGS) ParameterList.c
+List.o: List.c List.h
+	gcc -c $(FLAGS) List.c
