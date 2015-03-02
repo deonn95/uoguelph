@@ -1,0 +1,56 @@
+TESTING:
+OPENING THE PROGRAM:
+
+Opening the program with parameters:
+input.txt output.txt
+will open the input.txt file at the beginning, populate a list, and return it to main.
+upon exiting, it will write the list to file output.txt
+
+parameters:
+output.txt
+will write the list to output.txt upon exiting the program.
+However many paramters in use will be shown upon starting. IE.
+
+Welcome to DayPlanner\u2122.Choose a Command from the \"Commands\" menu above for adding an activity, searching activities, or quitting the program.
+You opened with 2 command arguments. <-----AMOUNT of args
+Picking add brings you to the add menu.
+A drop down menu allows to pick the type of activity.
+
+Adding
+ALL PROMPTS APPEAR WHEN ENTER IS PRESSED.
+
+A title textbox allows to enter the title of the activity.
+If no title is entered:
+Message dialog: You entered no title!
+
+The 5 textboxes for start time each need their own specific input, as highlighted whith the mouse.
+Thyey will prompt with inapporopriate input:
+Starting yeat is incorrect!
+Starting month is incorrect!
+Starting day is incorrect!
+Starting hour is incorrect!
+Starting minute is incorrect!
+Same with ending times. If integers are input, but are wrong, different text appears in message dialogs:
+
+Starting year is negative!
+Starting month is out of range!
+Starting day is out of range!
+Starting hour is out of range!
+Starting minute is out of range!
+
+Comment text box
+If no comment is entered:
+MessageDialog: You entered no comment!
+
+Location text box( Other only)
+If no location entered:
+MessageDialog: You entered no location!
+
+
+Searching
+Same prompts as before.
+
+The amount of errors in the request are written below. Ie. 4 text box errors for time and 1 for
+comment makes:
+4 corrections must be made to starting time.
+1 non-time correction must be made.

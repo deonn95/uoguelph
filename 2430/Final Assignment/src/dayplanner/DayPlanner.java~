@@ -1,0 +1,696 @@
+package dayplanner;
+import java.util.Scanner;
+
+/**
+ * DayPlanner class represents the Day Planner main program
+ * includes main method, command loop and carries out all functions
+ * @author Deon Naltchadjian
+ */
+public class DayPlanner {
+
+    /**
+     * Used to store max amount of activities per array
+     */
+    public static final int MAX_ACTIVITIES = 20;
+    
+    /**
+     * @param args no command line arguments
+     */  
+    public static void main(String[] args) {
+        
+        /**
+         * Scanner object. This will handle all user input in the main method.
+         */
+        Scanner s = new Scanner(System.in);
+        
+        /**
+         * Array of home activities with length MAX_ACTIVITIES
+         * Used to store all home activities in the program.
+         */
+        HomeActivity[] aHome = new HomeActivity[MAX_ACTIVITIES];
+        
+        /**
+         * Array of school activities with length MAX_ACTIVITIES
+         * Used to store all school activities in the program.
+         */
+        SchoolActivity[] aSchool = new SchoolActivity[MAX_ACTIVITIES];
+        
+        /**
+         * Array of other activities with length MAX_ACTIVITIES
+         * Used to store all other activities in the program.
+         */
+        OtherActivity[] aOther = new OtherActivity[MAX_ACTIVITIES];
+        
+        /**
+         * String used to store user input for all strings gotten in main method.
+         */
+        String userStr;
+        
+        /**
+         * addLoop used to maintain loop for the addition command. Better solution to using while(true). 
+         * searchLoop used to maintain loop for the search command. Solution to using while(true). 
+         * loop used to maintain main command loop. Solution to while(true).
+         */
+        boolean addLoop = true, searchLoop = true, loop = true;
+        
+        /**
+         * hCount used to count how many home activities are being stored.
+         * sCount used to count how many school activities are being stored.
+         * oCount used to count how many other activities are being stored.
+         */
+        int hCount = 0, sCount = 0, oCount = 0;
+        
+        /**
+         * loop that initializes all elements of the array to null.
+         * Used to avoid null pointer exceptions.
+         */
+        for(int i = 0; i < MAX_ACTIVITIES; i++){
+            aHome[i] = new HomeActivity();
+            aSchool[i] = new SchoolActivity();
+            aOther[i] = new OtherActivity();
+        }
+        
+        System.out.println("Welcome to Day Planner\u2122, the All-in-One Day Organizer!");
+        
+        /**
+         * Main command loop. Handles add, search, exit commands.
+         */
+        do{
+            System.out.println("Choose from the options of adding events (add), searching events (search), or (quit).");
+            userStr = s.nextLine();
+            
+            /**
+             * User chooses to add, brings them to the add loop.
+             * Add loop prompts for which kind of activity to be added.
+             */
+            if(userStr.equalsIgnoreCase("add") || userStr.equalsIgnoreCase("A")){
+                System.out.println("Adding a new activity to your day!\nNow, what kind of activity would you like to add? (home, school, other).\nYou have " + (MAX_ACTIVITIES - hCount) + " Home Activities remaining, " + (MAX_ACTIVITIES - sCount) + " School Activities remaining, and " + (MAX_ACTIVITIES - oCount) + " Other Activities remaining.");
+                do{
+                    
+                    userStr = s.nextLine();
+                    
+                    /**
+                     * User chooses home activity.
+                     * If the current amount of home activities created is less than the max, create a new home activity.
+                     * If not, prompts them with error that too many activities have been created.
+                     * Goes back to main command loop once finished.
+                     */
+                    if(userStr.equalsIgnoreCase("home") || userStr.equalsIgnoreCase("H")){
+                        if(hCount <= MAX_ACTIVITIES){
+                            aHome[hCount] = createHome();
+                            hCount++;
+                            addLoop = false;
+                        }
+                        else{
+                            System.out.println("Sorry, you already have too many home activities booked.");
+                        }
+                    }
+                    
+                    /**
+                     * User chooses school activity.
+                     * If the current amount of school activities created is less than the max, create a new school activity.
+                     * If not, prompts them with error that too many activities have been created.
+                     * Goes back to main command loop once finished.
+                     */
+                    else if(userStr.equalsIgnoreCase("school") || userStr.equalsIgnoreCase("S")){
+                        if(sCount <= MAX_ACTIVITIES){
+                            aSchool[sCount] = createSchool();
+                            sCount++;
+                            addLoop = false;
+                        }
+                        else{
+                            System.out.println("Sorry, you already have too many school activities booked.");
+                        }
+                    }
+                    
+                    /**
+                     * User chooses other activity.
+                     * If the current amount of other activities created is less than the max, create a new other activity.
+                     * If not, prompts them with error that too many activities have been created.
+                     * Goes back to main command loop once finished.
+                     */
+                    else if(userStr.equalsIgnoreCase("other") || userStr.equalsIgnoreCase("O")){
+                        if(oCount <= MAX_ACTIVITIES){
+                            aOther[oCount] = createOther();
+                            oCount++;
+                            addLoop = false;
+                        }
+                        else{
+                            System.out.println("Sorry, you already have too many other activities booked.");
+                        }
+                    }
+                    
+                    /**
+                     * User enters invalid command.
+                     * If they enter an invalid command, it prompts them with the error message.
+                     * Prompts for input again.
+                     */
+                    else{
+                        System.out.println("Sorry, enter either \"home\", \"school\", or \"other\" to determine the type of activity.");
+                    }
+                     
+                }while(addLoop);
+                
+            }
+            
+            /**
+             * User chooses to search.
+             * Search loop prompts the user for which activity type to be searched.
+             * "home", "school", "other", "" are all accepted.
+             * after searching, brings user back to main command loop.
+             */
+            else if(userStr.equalsIgnoreCase("search") || userStr.equalsIgnoreCase("S")){
+                System.out.println("Searching through your activities! Follow the prompts and Day Planner\u2122 will attempt to find your activity.");
+                System.out.println("First, enter the type of activity, or leave this blank to search all types of activities.");
+                do{
+                    userStr = s.nextLine();
+                    
+                    /**
+                     * User chooses to search home activities.
+                     * conducts a new search under home activities.
+                     */
+                    if(userStr.equalsIgnoreCase("home") || userStr.equalsIgnoreCase("H")){
+                        searchHome(aHome);
+                        searchLoop = false;
+                    }
+                    
+                    /**
+                     * User chooses to search school activities.
+                     * conducts a new search under school activities.
+                     */
+                    else if(userStr.equalsIgnoreCase("school") || userStr.equalsIgnoreCase("H")){
+                        searchSchool(aSchool);
+                        searchLoop = false;
+                    }
+                    
+                    /**
+                     * User chooses to search other activities.
+                     * conducts a new search under school activities.
+                     */
+                    else if(userStr.equalsIgnoreCase("other") || userStr.equalsIgnoreCase("O")){
+                        searchOther(aOther);
+                        searchLoop = false;
+                    }
+                    
+                    /**
+                     * User entered nothing. 
+                     * conducts a new search for all three arrays.
+                     */
+                    else if(userStr.equals("")){
+                        System.out.println("You have chosen to search for all types of activities, beginnning with Home.");
+                        searchHome(aHome);
+                        System.out.println("Now, Day Planner\u2122 will search School activities.");
+                        searchSchool(aSchool);
+                        System.out.println("Finally, search for Other activities.");
+                        searchOther(aOther);
+                        searchLoop = false;
+                    }
+                    
+                    /**
+                     * User entered invalid input.
+                     * Program gives error, and prompts for input again.
+                     */
+                    else{
+                        System.out.println("Sorry, you typed an invalid input. Enter any type of activity or leave this blank to search all activities.");
+                    }
+                }while(searchLoop);
+            }
+            
+            /**
+             * User chooses to quit.
+             * A thank you message appears, and the program exits.
+             */
+            else if(userStr.equalsIgnoreCase("quit") || userStr.equalsIgnoreCase("Q")){
+                System.out.println("Thank you for using Day Planner\u2122, goodbye!");
+                loop = false;
+            }
+            
+            /**
+             * User enters invalid input.
+             * Error message appears, prompted with another chance to input.
+             */
+            else{
+                System.out.println("Please enter a valid command.");
+            }   
+        }while(loop);  
+    }
+    
+    /**
+     * Creates a new home activity.
+     * Creates a generic activity, copies its contents and returns the new home object.
+     * @return the home activity created.
+     */
+    public static HomeActivity createHome(){
+        
+        HomeActivity newHome;
+        GenericActivity newActivity = createActivity("home");
+        
+        newHome = new HomeActivity(newActivity.getTitle(), newActivity.getStartTime(), newActivity.getEndTime(), newActivity.getComment());
+        
+        return newHome;
+        
+    }
+    
+    /**
+     * Searches home activity contents.
+     * Passes the home activity array from main and initiates a generic activity array of the same length.
+     * copies the contents of the array into the generic array, runs a search in the generic activity.
+     * @param toGeneric the home activity array to be copied into a generic activity array.
+     */
+    public static void searchHome(HomeActivity[] toGeneric){
+        
+        GenericActivity[] toSearch = new GenericActivity[MAX_ACTIVITIES]; 
+        for(int i = 0; i < toSearch.length; i++){
+            toSearch[i] = new GenericActivity();
+        }
+        
+        for(int i = 0; i < toGeneric.length; i++){
+            if(!toGeneric[i].isNull()){
+                toSearch[i] = new GenericActivity(toGeneric[i].getTitle(), toGeneric[i].getStartTime(), toGeneric[i].getEndTime(), toGeneric[i].getComment());
+            }
+        }
+        
+        searchActivity(toSearch);
+    }
+    
+    /**
+     * Creates a new school activity.
+     * Creates a generic activity, copies its contents and returns the new school object.
+     * @return the school activity created.
+     */
+    public static SchoolActivity createSchool(){
+        
+        SchoolActivity newSchool;
+        GenericActivity newActivity = createActivity("school");
+        
+        newSchool = new SchoolActivity(newActivity.getTitle(), newActivity.getStartTime(), newActivity.getEndTime(), newActivity.getComment());
+        
+        return newSchool;
+        
+    }
+    
+    /**
+     * Searches school activity contents.
+     * Passes the school activity array from main and initiates a generic activity array of the same length.
+     * copies the contents of the array into the generic array, runs a search in the generic activity.
+     * @param toGeneric the school activity array to be copied into a generic activity array.
+     */
+    public static void searchSchool(SchoolActivity[] toGeneric){
+        
+        GenericActivity[] toSearch = new GenericActivity[MAX_ACTIVITIES]; 
+        for(int i = 0; i < toSearch.length; i++){
+            toSearch[i] = new GenericActivity();
+        }
+        
+        for(int i = 0; i < toGeneric.length; i++){
+            if(!toGeneric[i].isNull()){
+                toSearch[i] = new GenericActivity(toGeneric[i].getTitle(), toGeneric[i].getStartTime(), toGeneric[i].getEndTime(), toGeneric[i].getComment());
+            }
+        }
+        
+        searchActivity(toSearch);
+    }
+    
+    /**
+     * Creates a new other activity.
+     * Creates a generic activity, copies its contents and returns the new other object.
+     * @return the other activity created.
+     */
+    public static OtherActivity createOther(){
+        
+        OtherActivity newOther;
+        GenericActivity newActivity = createActivity("other");
+        
+        newOther = new OtherActivity(newActivity.getTitle(), newActivity.getStartTime(), newActivity.getEndTime(), newActivity.getComment(), newActivity.getLocation());
+        
+        return newOther;
+        
+    }
+    
+    /**
+     * Searches other activity contents.
+     * Passes the other activity array from main and initiates a generic activity array of the same length.
+     * copies the contents of the array into the generic array, runs a search in the generic activity.
+     * @param toGeneric the other activity array to be copied into a generic activity array.
+     */
+    public static void searchOther(OtherActivity[] toGeneric){
+        
+        GenericActivity[] toSearch = new GenericActivity[MAX_ACTIVITIES]; 
+        for(int i = 0; i < toSearch.length; i++){
+            toSearch[i] = new GenericActivity();
+        }
+        
+        for(int i = 0; i < toGeneric.length; i++){
+            if(!toGeneric[i].isNull()){
+                toSearch[i] = new GenericActivity(toGeneric[i].getTitle(), toGeneric[i].getStartTime(), toGeneric[i].getEndTime(), toGeneric[i].getComment(), toGeneric[i].getLocation());
+            }
+        }
+        
+        searchActivity(toSearch);
+    }
+    
+    /**
+     * Takes in an activity type via string, creates a generic activity.
+     * Using a series of user input commands, takes in the required values to make a new activity.
+     * @param typeStr stores type of activity. If it's an other activity, this string is used to make a location.
+     * @return the newly created generic activity
+     */
+    public static GenericActivity createActivity(String typeStr){
+        
+        /**
+         * Creates a new empty generic activity.
+         */
+        GenericActivity newActivity = new GenericActivity();
+        
+        /**
+         * Creates start and end time objects, sets them to null. 
+         */
+        Time st, et = null;
+        
+        /**
+         * Creates scanner object to handle user inputs.
+         */
+        Scanner s = new Scanner(System.in);
+        String nextStr;
+        
+        /**
+         * boolean used to check if the first time entered comes before the second date entered.
+         */
+        boolean timeLoop = true;
+        
+        System.out.println("Please enter an activity title (i.e. \"Go for a jog\").");
+        nextStr = s.nextLine();
+        newActivity.setTitle(nextStr);
+        System.out.println("Great, Day Planner\u2122 is happy to help you plan your \"" + newActivity.getTitle() + "\" activity!");
+            
+        System.out.println("Let's get to entering a starting time for the activity.");
+        st = createTime();
+        newActivity.setStartTime(st);
+        System.out.println("Perfect, your " + newActivity.getTitle() + " activity begins at " + newActivity.getStartTime().toString() + ".");
+        
+        System.out.println("All activities must come to an end. Now enter the ending time.");
+        
+        /**
+         * If the second time entered comes before the first, redo the time input.
+         */
+        while(timeLoop){
+            et = createTime();
+            if(st.compareTime(et) == -1){
+                System.out.println("Sorry, you entered an ending time that was before the starting time.\nPlease enter an ending time that comes after the starting time.");
+            }
+            else{
+                timeLoop = false;
+            }
+        }
+        newActivity.setEndTime(et);
+        System.out.println("Okay, your " + newActivity.getTitle() + " activity ends at " + newActivity.getEndTime().toString() + ".");
+        
+        System.out.println("Now, enter a comment about the activity that you think describes it best.");
+        nextStr = s.nextLine();
+        newActivity.setComment(nextStr);
+        
+        if(typeStr.equals("other")){
+            System.out.println("Finally, enter a location. (i.e. \"Paris\").");
+            nextStr = s.nextLine();
+            newActivity.setLocation(nextStr);
+        }
+        System.out.println("Great, Day Planner\u2122 has recorded your " + typeStr + " activity! Returning to the main menu now.");
+        
+        return newActivity;
+        
+    }
+    
+    /**
+     * Searches through an array of generic activities.
+     * Passes in a generic activity array to be searched.
+     * Asks the user to enter a start and end time, then keywords.
+     * Parses through array and finds matches.
+     * @param toSearch 
+     */
+    public static void searchActivity(GenericActivity[] toSearch){
+        
+        Scanner s = new Scanner(System.in);
+        String userStr;
+        
+        /**
+         * Array that stores the keywords the user wants to search.
+         */
+        String [] keywords;
+        
+        /**
+         * Two time objects that store the start and end time range for the search.
+         */
+        Time st, et = new Time();
+        
+        /**
+         * used to loop time input until the second time entered comes after the first.
+         */
+        boolean timeLoop = true;
+        
+        /**
+         * boolean array used to store a match at a given index of the generic activity array.
+         */
+        boolean [] matches = new boolean[MAX_ACTIVITIES];
+        
+        System.out.println("Now, leave this blank to search all times, or type anything to enter times.");
+        userStr = s.nextLine();
+        
+        /**
+         * if they entered anything that isn't blank, let them set a time. 
+         */
+        if(!userStr.equals("")){
+            System.out.println("You have chosen to enter a starting time range.");
+            st = createTime();
+            while(timeLoop){
+                System.out.println("Enter the ending time of the time range.");
+                et = createTime();
+                if(st.compareTime(et) == -1){
+                    System.out.println("Sorry, your ending time comes before your starting time. Try again.");
+                }
+                else{
+                    timeLoop = false;
+                }
+            }
+        }
+        
+        /**
+         * if they entered nothing, set times to the max and min values.
+         */
+        else{
+            st = new Time(0, 0, 0, 0, 0);
+            et = new Time(Integer.MAX_VALUE, 12, 31, 23, 59);
+        }
+        System.out.println("Finally, enter keywords from the title, in any order. Or, leave blank to search all keywords.");
+        userStr = s.nextLine();
+        
+        /**
+         * if the user enters keywords, searches them.
+         * uses split() command to split the keywords at the space delimeter into array elements.
+         */
+        if(!userStr.equals("")){
+            keywords = userStr.split(" ");
+            /**
+             * Loop that parses through generic activities array.
+             */
+            for(int i = 0; i < toSearch.length; i++){
+                if(!toSearch[i].isNull()){
+                    /**
+                     * Loop that parses through keywords.
+                     * If the keywords are there, set the boolean match at that index to true.
+                     */
+                    for(int j = 0; j < keywords.length; j++){
+                        if(toSearch[i].getTitle().contains(keywords[j])){
+                            matches[i] = true;
+                        }
+                        else{
+                            matches[i] = false;
+                            j = keywords.length;
+                        }
+                    }
+                    if(st.compareTime(toSearch[i].getStartTime()) != -1 && et.compareTime(toSearch[i].getEndTime()) == -1){
+                        matches[i] = true;
+                    }
+                    else{
+                        matches[i] = false;
+                    }
+                }
+                else{
+                    i = toSearch.length;
+                }
+            }
+        }
+        
+        /**
+         * If no keywords entered, it searches for the activity in the selected time range.
+         * Same loop that parses through keywords.
+         * If the keywords are there, set the boolean match at that index to true.
+         */
+        else{
+            for(int i = 0; i < toSearch.length; i++){
+                if(!toSearch[i].isNull()){
+                    if(st.compareTime(toSearch[i].getStartTime()) != -1 && et.compareTime(toSearch[i].getEndTime()) == -1){
+                        matches[i] = true;
+                    }
+                    else{
+                        matches[i] = false;
+                    }
+                }
+            }
+        }
+        
+        /**
+         * Goes through the boolean array matches and prints each activity found with a match.
+         */
+        for(int i = 0; i < matches.length; i++){
+            if(matches[i]){
+                System.out.println(toSearch[i].toString());
+            }
+        }
+    }
+    
+    /**
+     * Used to initialize times for activities, setting values for each attribute.
+     * @return the time created.
+     */
+    public static Time createTime(){
+        
+        /**
+         * Creates new empty time object.
+         */
+        Time newTime = new Time();
+        Scanner s = new Scanner(System.in);
+        
+        /**
+         * Used to store months at selected indexes for when month is entered.
+         * entering "February" gives index 1, etc.
+         */
+        String[] monthVault = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
+        /**
+         * Used to store next unit of time.
+         */
+        String nextInterval;
+        /**
+         * Used to convert the unit to an integer.
+         */
+        int conv;
+        /**
+         * loop used to maintain loops, better solution to while(true) and break.
+         * match used to match up months in the vault with strings.
+         */
+        boolean loop = true, match = false;
+        
+        System.out.println("First, enter the year (i.e. 2014).");
+        
+        /**
+         * Used to enter a year greater than 0.
+         * If less than 0 or not an integer, error message.
+         */
+        do{
+            nextInterval = s.nextLine();
+            try{
+                conv = Integer.parseInt(nextInterval);
+                if(conv >= 0){
+                    newTime.setYear(conv);
+                    loop = false;
+                }
+                else{
+                    System.out.println("You tried to enter a negative year, that's imppossible.");
+                }
+            }catch(Exception e){
+                System.out.println("You entered the year incorrectly. Use only integers (i.e. 1995)");
+            }
+        }while(loop);
+        
+        loop = true;
+        System.out.println("Now, enter the month (i.e. \"June\").");
+        
+        /**
+         * Used to enter a month.
+         * If not in the month vault or an integer, error message.
+         */
+        do{
+            nextInterval = s.nextLine();
+            for(int i = 0; i < monthVault.length; i++){
+                if(nextInterval.equalsIgnoreCase(monthVault[i])){
+                    newTime.setMonth(i + 1);
+                    match = true;
+                    loop = false;
+                    i = monthVault.length;
+                }
+            }
+            if(!match){
+                System.out.println("Sorry, you entered the month incorrectly. Try again (i.e. \"March\").");
+            }
+        }while(loop);
+        
+        loop = true;
+        System.out.println("Now, enter the day, between 1 and 31. (i.e. 13).");
+        /**
+         * Used to enter a day greater than 0 and less than 32.
+         * If less than 0 or greater than 32 or not an integer, error message.
+         */
+        do{
+            nextInterval = s.nextLine();
+            try{
+                conv = Integer.parseInt(nextInterval);
+                if(conv > 0 && conv < 32){
+                    newTime.setDay(conv);
+                    loop = false;
+                }
+                else{
+                    System.out.println("You tried to enter an impossible day. Stay within 1 and 31.");
+                }
+            }catch(Exception e){
+                System.out.println("You entered the day incorrectly. Use only integers (i.e. 25)");
+            }
+        }while(loop);
+        
+        loop = true;
+        System.out.println("Now, enter the hour of your event from 0 to 23. (i.e. 7).");
+        
+        /**
+         * Used to enter an hour greater than 0 and less than 24.
+         * If less than 0 or greater than 24 or not an integer, error message.
+         */
+        do{
+            nextInterval = s.nextLine();
+            try{
+                conv = Integer.parseInt(nextInterval);
+                if(conv >= 0 && conv < 24){
+                    newTime.setHour(conv);
+                    loop = false;
+                }
+                else{
+                    System.out.println("You tried to enter an invalid hour. Stay between 0 and 23 please.");
+                }
+            }catch(Exception e){
+                System.out.println("You entered the hour incorrectly. Use only integers (i.e. 12)");
+            }
+        }while(loop);
+        
+        loop = true;
+        System.out.println("Finally, enter the minute from 0 to 59 (i.e. 30).");
+        
+        /**
+         * Used to enter a minute greater than 0 and less than 59.
+         * If less than 0 or greater than 59 or not an integer, error message.
+         */
+        do{
+            nextInterval = s.nextLine();
+            try{
+                conv = Integer.parseInt(nextInterval);
+                if(conv >= 0 && conv < 59){
+                    newTime.setMinute(conv);
+                    loop = false;
+                }
+                else{
+                    System.out.println("You tried to enter an invalid minute. Stay between 0 and 59 please.");
+                }
+            }catch(Exception e){
+                System.out.println("You entered the year incorrectly. Use only integers (i.e. 48)");
+            }
+        }while(loop);
+        
+        return newTime;
+    }
+}
